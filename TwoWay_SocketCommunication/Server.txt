@@ -1,0 +1,28 @@
+import java.net.*;
+import java.io.*;
+
+public class Server
+{
+	public static void main(String args[]) throws IOException
+	{
+		ServerSocket ss = new ServerSocket(4999);
+		Socket s = ss.accept();
+		
+		System.out.println("client connected");
+
+		InputStreamReader in = new InputStreamReader(s.getInputStream());
+		BufferReader bf = new BufferReader(in);
+		
+		String str = bf.readLine();
+		System.out.println("client : "+str);
+
+
+	
+		
+	}
+
+
+
+
+
+}
