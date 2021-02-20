@@ -139,6 +139,8 @@ class ClientRun {
 		System.out.println("Speed set  to (same as LV) : " + clSpeed);
 		return data;
 	}
+	
+	
 
 	private static DataInputDto smvDetected() {
 		DataInputDto data = new DataInputDto();
@@ -147,7 +149,7 @@ class ClientRun {
 		data.setvGap(ClientRun.vGap);
 		data.setSpeed(ClientRun.clSpeed);
 		data.setOperation(StringConstants.SMALL_DETECTED);
-		if(ClientRun.vGap >= 5) {
+		if(ClientRun.vGap >= 7) {
 			data.setOperation(StringConstants.DECOUPLE);
 			sendDataToServer(StringConstants.DECOUPLE);
 		} 
@@ -161,6 +163,10 @@ class ClientRun {
 		ClientRun.vGap = ClientRun.vGap + 4;
 		data.setvGap(ClientRun.vGap);
 		data.setOperation(StringConstants.LARGE_DETECTED);
+		if(ClientRun.vGap >= 7) {
+			data.setOperation(StringConstants.DECOUPLE);
+			sendDataToServer(StringConstants.DECOUPLE);
+		} 
 		return data;
 	}
 
