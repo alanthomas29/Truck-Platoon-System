@@ -2,11 +2,9 @@ package com.client;
 
 // Client2 class that 
 // sends data and receives also 
-  
-import java.io.*; 
-import java.net.*;
-import java.util.Objects;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.Socket;
 
 import com.utiltity.AppendableObjectOutputStream;
 import com.utiltity.DataInputDto;
@@ -96,12 +94,21 @@ class ClientRun {
 		case StringConstants.NO_OBSTACLE:
 			result = replatoon();
 			break;
+		case StringConstants.DECOUPLE:
+			result = decouple();
+			break;	
 		default:
 			break;
 
 		}
 		
 		return result;
+	}
+
+	private static DataInputDto decouple() {
+		DataInputDto data = new DataInputDto();
+		data.setOperation(StringConstants.DECOUPLE);
+		return data;
 	}
 
 	private static DataInputDto replatoon() {
@@ -121,11 +128,16 @@ class ClientRun {
 	private static DataInputDto smvDetected() {
 		DataInputDto data = new DataInputDto();
 		ClientRun.vGap = ClientRun.vGap + 1;
-		ClientRun.clSpeed = ClientRun.clSpeed - 30;
+		ClientRun.clSpeed = ClientRun.clSpeed - 10;
 		data.setvGap(ClientRun.vGap);
 		data.setSpeed(ClientRun.clSpeed);
 		data.setOperation(StringConstants.SMALL_DETECTED);
-		return data;
+		if(ClientRun.vGap >= 5) {
+			data.setOperation(StringConstants.DECOUPLE);
+			sendDataToServer(StringConstants.DECOUPLE, 0);
+		} 
+			return data;
+		
 	}
 
 
