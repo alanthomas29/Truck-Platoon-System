@@ -1,7 +1,5 @@
 package com.server;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.Socket;
 
 import com.utiltity.AppendableObjectInputStream;
@@ -38,7 +36,13 @@ public class ClientMessageReceiverThread implements Runnable {
 			while ((data =(DataInputDto) is.readObject() ) != null) {
 				String str1 = data.getOperation();
 				System.out.println("From "+ClientName+": "+str1);
-
+				
+				if(str1.equalsIgnoreCase(StringConstants.DECOUPLE)) {
+					s.close();
+					ServerRun.clientList.remove(s);
+					break;
+					
+				}
 				if(str1.equalsIgnoreCase("exit"))	//exit loop
 				{
 					System.out.println("Client Exited!!!");
@@ -100,6 +104,8 @@ public class ClientMessageReceiverThread implements Runnable {
 				System.out.println(ClientName + " curr gap - " +ServerRun.vGapCl2);
 			}
 			break;
+		case StringConstants.DECOUPLE:
+			break;		
 		default:
 			break;
 		}
