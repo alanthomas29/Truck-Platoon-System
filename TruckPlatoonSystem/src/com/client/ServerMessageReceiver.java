@@ -1,14 +1,12 @@
 package com.client;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
+import java.io.EOFException;
 import java.net.Socket;
 import java.net.SocketException;
 
 import com.utiltity.AppendableObjectInputStream;
 import com.utiltity.DataInputDto;
-
+import com.utiltity.StringConstants;
 
 
 public class ServerMessageReceiver implements Runnable {
@@ -56,6 +54,8 @@ public class ServerMessageReceiver implements Runnable {
 		}
 		catch (SocketException e) {
 			//ignore as exit the application
+		}catch(EOFException e) {
+			System.out.println("Connection lost...");
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -68,13 +68,23 @@ public class ServerMessageReceiver implements Runnable {
 		str = stAr[1];
 		System.out.println("str-" + str);*/
 		switch(data.getOperation()) {
-		case "initiate" : 
+		case StringConstants.INITIATE : 
 			System.out.println("Former Vehicle Connected to Lead Vehicle");
 			System.out.println("Setting speed to: " + data.getSpeed() + " mph");
-			System.out.println("Maintaining a distance of: " + data.getvGap() + " meters");
+			System.out.println("Setting steering angle to: " + data.getSteerAngle());
+			ClientRun.clSpeed = data.getSpeed();
+			ClientRun.speedLV = data.getSpeed();
+			ClientRun.steeringAngle = data.getSteerAngle();
+			ClientRun.destDistance = data.getDestDistance() + ClientRun.truckLength + ClientRun.vGap;
+			System.out.println("Setting destination distance to: " + ClientRun.destDistance);
 			break;
-		case "brake" : 
-			System.out.println("Braking as Lead Applied Brakes");
+		case StringConstants.BRAKE : 
+			System.out.println("Braking as Lead Applied Brakes and Setting speed to " + ClientRun.destDistance);
+			ClientRun.clSpeed = data.getSpeed();
+			break;
+		case StringConstants.RESTART :
+			System.out.println("Setting speed to: " + data.getSpeed() + " mph");
+			ClientRun.clSpeed = data.getSpeed();
 			break;
 		default:
 			break;
