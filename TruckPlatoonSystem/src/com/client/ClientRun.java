@@ -20,46 +20,53 @@ class ClientRun {
   public static int truckLength = 1;
   public static int speedLV;
   public static boolean flag =false;
+  
     @SuppressWarnings("resource")
+    
 	public static void main(String args[]) 
         throws Exception 
     {
     	try {
-			System.out.println("Starting Client...");
+			
 			// Create client socket 
+    		startTPS();
 	        Socket s = new Socket("localhost", 888);
-	        
 	        new Thread(new ServerMessageReceiver(s)).start();
 	  
-	        // to send data to the server 
+	       // to send data to the server 
 	       // DataOutputStream dos = new DataOutputStream(s.getOutputStream()); 
 	  
 	        // to read data from the keyboard 
 	        BufferedReader kb = new BufferedReader(new InputStreamReader(System.in)); 
 	        
 	        //String str = kb.readLine();
-	        int speed = 0;
 	        String str;
 	       
 	        AppendableObjectOutputStream os = null;
 			
 	        // repeat as long as exit 
 	        // is not typed at client 
+	        System.out.println("Following Vehicle Control Options");
+	        System.out.println("CLIENTACK  || SMALL_DETECTED || LARGE_DETECTED || CLIENTBRAKE || NO_OBSTACLE || DECOUPLE");
+	        
 	        while (!(str = kb.readLine()).equals("exit")) { 
-	        	DataInputDto data = sendDataToServer(str, speed);
+	        	DataInputDto data = sendDataToServer(str);
 	 	        if(data != null) {
 	 	        flag = true;
 	 			os = new AppendableObjectOutputStream(s.getOutputStream());
 	 			os.writeObject(data);
 	 			os.flush();
 	 			}
+	 	        
 	        	//sendInitialInputsToServer();
 	            // send to the server 
+	 	        
 	        	System.out.println("str-"+str);
 	            //dos.writeBytes(str + "\n");  
 	        } 
 	        DataInputDto data = new DataInputDto();
-	        if(!flag) {
+	        if(!flag) 
+	        {
 	        os = new AppendableObjectOutputStream(s.getOutputStream());
 	        data.setOperation("exit");
  			os.writeObject(data);
@@ -81,11 +88,15 @@ class ClientRun {
     }
 
 	@SuppressWarnings("resource")
-	private static DataInputDto sendDataToServer(String str, int speed) {
+	private static DataInputDto sendDataToServer(String str) {
 		DataInputDto result = null;
-		switch (str) {
+		
+		System.out.println("OPTION SELECTED   : "+str);
+		
+		switch (str) 
+		{
 		case StringConstants.CLIENTACK:
-			result = sendInitialInputsToServer(speed);
+			result = sendInitialInputsToServer();
 			break;
 		case StringConstants.SMALL_DETECTED:
 			result = smvDetected();
@@ -104,7 +115,6 @@ class ClientRun {
 			break;	
 		default:
 			break;
-
 		}
 		
 		return result;
@@ -139,7 +149,7 @@ class ClientRun {
 		data.setOperation(StringConstants.SMALL_DETECTED);
 		if(ClientRun.vGap >= 5) {
 			data.setOperation(StringConstants.DECOUPLE);
-			sendDataToServer(StringConstants.DECOUPLE, 0);
+			sendDataToServer(StringConstants.DECOUPLE);
 		} 
 			return data;
 		
@@ -161,15 +171,31 @@ class ClientRun {
 		data.setOperation(StringConstants.CLIENTBRAKE);
 		return data;
 	}
-
-	private static DataInputDto sendInitialInputsToServer(int speed) {
+// Function to check Following Vehicle Characteristics
+	
+	private static DataInputDto sendInitialInputsToServer() {
 		DataInputDto data = new DataInputDto();
 		
-		//System.out.println("Speed set at: " + data.getSpeed() + " mph");
-		data.setSpeed(speed);
-		data.setvGap(2);
+		System.out.println("Following Vehicle Speed "+ clSpeed + " mph 	Safe Distance/Vehicle Gap " + vGap );
+		data.setSpeed(clSpeed);
+		data.setvGap(vGap); 
+		
+		//to match with server operation
 		data.setOperation(StringConstants.CLIENTACK);
-		//System.out.println(data.toString());
 		return data;
-	} 
+	}
+	
+	private static void startTPS() 
+	{
+
+		System.out.println("              <   <       <           < Truck Platooning System >          >       >   > ");
+		System.out.println("              <   <       <           <         Welcome         >          >       >   > ");
+		System.out.println("                                               Connected                                ");
+		System.out.println("                           			Platoon Status : Follower Vehicle                    ");
+		System.out.println("                                      Weather : Sunny 14 Degrees                    ");
+		System.out.println(" 									Client Connection Established					");
+		System.out.println("                           	 			Traffic : Usual Traffic           ");
+
+
+	}
 } 
