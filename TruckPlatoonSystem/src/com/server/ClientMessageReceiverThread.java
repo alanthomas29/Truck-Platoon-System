@@ -6,24 +6,25 @@ import com.utiltity.AppendableObjectInputStream;
 import com.utiltity.DataInputDto;
 import com.utiltity.StringConstants;
 
-public class ClientMessageReceiverThread implements Runnable {
-
-	Socket s;
+public class ClientMessageReceiverThread implements Runnable
+{
+    Socket s;
 	String ClientName;
 
-	public ClientMessageReceiverThread(Socket s, String ClientName) {
+	public ClientMessageReceiverThread(Socket s, String ClientName) 
+	{
 		this.s = s;
 		this.ClientName = ClientName;
 	}
 
 	@Override
-	public void run() {
-		try {
+	public void run() 
+	{
+		try 
+		{
 			System.out.println(ClientName + " Connected :)");
 
 			// to read data coming from the client
-			// BufferedReader br = new BufferedReader(new
-			// InputStreamReader(s.getInputStream()));
 
 			AppendableObjectInputStream is = new AppendableObjectInputStream(s.getInputStream());
 			DataInputDto data = null;
@@ -32,47 +33,51 @@ public class ClientMessageReceiverThread implements Runnable {
 			// repeat as long as the client
 			// does not send a null string or exit
 			// read from client
+			
 			String str;
-			// while ((str = br.readLine()) != null) {
-			while ((data = (DataInputDto) is.readObject()) != null) {
+			
+			while ((data = (DataInputDto) is.readObject()) != null)
+			{
 				String str1 = data.getOperation();
 				System.out.println("From " + ClientName + ": " + str1);
 
-				if (str1.equalsIgnoreCase(StringConstants.DECOUPLE)) {
+				if (str1.equalsIgnoreCase(StringConstants.DECOUPLE)) 
+				{
 					s.close();
 					ServerRun.clientList.remove(s);
 					break;
-
-				}
+                }
 				if (str1.equalsIgnoreCase("exit")) // exit loop
 				{
 					System.out.println("Client Exited!!!");
 					// System.exit(0);
 					break;
-				} else {
+				}
+				else 
+				{
 					performActivityClient(data);
 				}
 
 			}
 			// close connection
-			// br.close();
 			s.close();
 			ServerRun.clientList.remove(s);
 			System.out.println(ClientName + " Disconnected :(");
 
-		} catch (Exception e) {
+		} 
+		catch (Exception e) 
+		{
 			e.printStackTrace();
 		}
 	}
 
-	private void performActivityClient(DataInputDto data) {
+	private void performActivityClient(DataInputDto data) 
+	{
 		// TODO Auto-generated method stub
 		System.out.println("str-" + data);
-		/*
-		 * String[] stAr = str.split("\\^"); str = stAr[1]; System.out.println("str-" +
-		 * str);
-		 */
-		switch (data.getOperation()) {
+		
+		switch (data.getOperation())
+		{
 		case StringConstants.CLIENTACK:
 			System.out.println("init client :");
 			System.out.println("Speed set at: " + data.getSpeed() + " mph");
@@ -83,22 +88,26 @@ public class ClientMessageReceiverThread implements Runnable {
 			break;
 
 		case StringConstants.SMALL_DETECTED:
-			if (ClientName.trim().equalsIgnoreCase("CLIENT 1")) {
-				// System.out.println(ClientName + " prev gap - " +ServerRun.vGapCl1);
+			if (ClientName.trim().equalsIgnoreCase("CLIENT 1")) 
+			{
 				ServerRun.vGapCl1 = data.getvGap();
 				System.out.println(ClientName + " curr gap - " + ServerRun.vGapCl1);
-			} else if (ClientName.trim().equalsIgnoreCase("CLIENT 2")) {
-				// System.out.println(ClientName + " prev gap - " +ServerRun.vGapCl2);
+			}
+			else if (ClientName.trim().equalsIgnoreCase("CLIENT 2")) 
+			{
 				ServerRun.vGapCl2 = data.getvGap();
 				System.out.println(ClientName + " curr gap - " + ServerRun.vGapCl2);
 			}
 			break;
 
 		case StringConstants.LARGE_DETECTED:
-			if (ClientName.trim().equalsIgnoreCase("CLIENT 1")) {
+			if (ClientName.trim().equalsIgnoreCase("CLIENT 1"))
+			{
 				ServerRun.vGapCl1 = data.getvGap();
 				System.out.println(ClientName + " curr gap - " + ServerRun.vGapCl1);
-			} else if (ClientName.trim().equalsIgnoreCase("CLIENT 2")) {
+			} 
+			else if (ClientName.trim().equalsIgnoreCase("CLIENT 2")) 
+			{
 				ServerRun.vGapCl2 = data.getvGap();
 				System.out.println(ClientName + " curr gap - " + ServerRun.vGapCl2);
 			}
