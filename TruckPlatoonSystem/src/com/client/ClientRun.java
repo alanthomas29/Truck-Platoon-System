@@ -58,12 +58,17 @@ class ClientRun {
 	        	System.out.println("str-"+str);
 	            //dos.writeBytes(str + "\n");  
 	        } 
-	        if(!flag) {
 	        DataInputDto data = new DataInputDto();
+	        if(!flag) {
 	        os = new AppendableObjectOutputStream(s.getOutputStream());
 	        data.setOperation("exit");
  			os.writeObject(data);
  			os.flush();
+ 			} else {
+ 				os = new AppendableObjectOutputStream(s.getOutputStream());
+ 			    data.setOperation("exit");
+ 	 			os.writeObject(data);
+ 	 			os.flush();
  			}
 	        // close connection. 
 	        os.close();
