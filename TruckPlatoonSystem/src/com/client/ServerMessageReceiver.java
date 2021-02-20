@@ -20,10 +20,6 @@ public class ServerMessageReceiver implements Runnable {
 	@Override
 	public void run() {
 		try {
-			// to read data coming from the client 
-			//BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream())); 
-
-			//ObjectInputStream is = new ObjectInputStream(s.getInputStream());
 			
 			AppendableObjectInputStream is = new AppendableObjectInputStream(s.getInputStream());
 			
@@ -32,9 +28,8 @@ public class ServerMessageReceiver implements Runnable {
 			// repeat as long as the client 
 			// does not send a null string or exit
 			// read from client
-			//String str = data.getOperation();	
-			String st ;
-	//		while ((st= br.readLine()) != null) {
+			
+
 			while ((data =(DataInputDto) is.readObject() ) != null) {
 				String str = data.getOperation();
 				if(str.equalsIgnoreCase("exit")) {	//exit loop
@@ -72,20 +67,24 @@ public class ServerMessageReceiver implements Runnable {
 			System.out.println("Former Vehicle Connected to Lead Vehicle");
 			System.out.println("Setting speed to: " + data.getSpeed() + " mph");
 			System.out.println("Setting steering angle to: " + data.getSteerAngle());
+			
 			ClientRun.clSpeed = data.getSpeed();
 			ClientRun.speedLV = data.getSpeed();
 			ClientRun.steeringAngle = data.getSteerAngle();
 			ClientRun.destDistance = data.getDestDistance() + ClientRun.truckLength + ClientRun.vGap;
 			System.out.println("Setting destination distance to: " + ClientRun.destDistance);
 			break;
+			
 		case StringConstants.BRAKE : 
-			System.out.println("Braking as Lead Applied Brakes and Setting speed to " + ClientRun.destDistance);
+			System.out.println("Braking as Lead Vehcile Applied Brakes and Setting speed to " + ClientRun.clSpeed);
 			ClientRun.clSpeed = data.getSpeed();
 			break;
+			
 		case StringConstants.RESTART :
-			System.out.println("Setting speed to: " + data.getSpeed() + " mph");
+			System.out.println(" ReConnect ");
 			ClientRun.clSpeed = data.getSpeed();
 			break;
+			
 		default:
 			break;
 		}
