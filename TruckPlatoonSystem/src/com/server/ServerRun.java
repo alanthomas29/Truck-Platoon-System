@@ -84,8 +84,17 @@ class ServerRun{
 			
 			if(str.equals("brake"))
 			{
-
-			//brake defect fix 
+			Scanner sc = new Scanner(System.in);
+			System.out.println("If Emergency Brake Press 1 else press 0");
+			int brakeOption = sc.nextInt();
+			if(brakeOption == 1)
+			{
+				serverSpeed = 0;
+			}
+			else
+			{
+			serverSpeed = serverSpeed - 10;
+			}
 			}
 			else
 			{
@@ -244,6 +253,9 @@ class ServerRun{
 		System.out.println("                           			Platoon Status : Lead Vehicle                   	 ");
 		System.out.println("                                      Weather : Sunny 14 Degrees                    	");
 		System.out.println("                           	 			Traffic : Usual Traffic           					");
-		//speed initialization
+		serverSpeed = 60;
+		steeringAngleLead = 30;
+		System.out.println("Vehicle Speed : " + serverSpeed + " kmph \nSteering Angle: " + steeringAngleLead + "Degrees");
+		System.out.println("                           	 		Wait for TPS Activation          					");
 	}
 }
