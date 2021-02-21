@@ -19,7 +19,7 @@ public class ClientMessageReceiverThread implements Runnable {
 	@Override
 	public void run() {
 		try {
-			System.out.println(ClientName + " Connected :)");
+			System.out.println(ClientName + " CONNECTED");
 
 			// to read data coming from the client
 			// BufferedReader br = new BufferedReader(new

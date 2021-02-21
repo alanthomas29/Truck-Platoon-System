@@ -64,18 +64,20 @@ public class ServerMessageReceiver implements Runnable {
 		System.out.println("str-" + str);*/
 		switch(data.getOperation()) {
 		case StringConstants.INITIATE : 
-			System.out.println("Former Vehicle Connected to Lead Vehicle");
-			System.out.println("Setting speed to: " + data.getSpeed() + " mph");
-			System.out.println("Setting steering angle to: " + data.getSteerAngle());
 			
 			ClientRun.clSpeed = data.getSpeed();
 			ClientRun.speedLV = data.getSpeed();
 			ClientRun.steeringAngle = data.getSteerAngle();
 			ClientRun.destDistance = data.getDestDistance() + ClientRun.truckLength + ClientRun.vGap;
-			System.out.println("Setting destination distance to: " + ClientRun.destDistance);
+			System.out.println("Former Vehicle Connected to Lead Vehicle");
+			System.out.println("Setting speed to: " + data.getSpeed() + " mph");
+			System.out.println("Setting steering angle to: " + data.getSteerAngle());
+			
+			//System.out.println("Setting destination distance to: " + ClientRun.destDistance);
 			break;
 			
 		case StringConstants.BRAKE : 
+			ClientRun.clSpeed = data.getSpeed();
 			System.out.println("Braking as Lead Vehcile Applied Brakes and Setting speed to " + ClientRun.clSpeed);
 			ClientRun.clSpeed = data.getSpeed();
 			break;

@@ -39,12 +39,11 @@ class ServerRun{
 		ServerSocket ss = new ServerSocket(888);
 
 		startTPS();
-		serverSpeed = getVehicleSpeedACC();
-		steeringAngleLead = getSteeringAngleACC();
+
 		
 
 
-		System.out.println("Vehicle Speed : " + serverSpeed + " kmph \nSteering Angle " + steeringAngleLead);
+		
 		
 		//Accept New Client and add in Client List for sending messages
 		//Create new Thread for each client to show received messages
@@ -54,6 +53,8 @@ class ServerRun{
 				Socket s;
 				try {
 					s = ss.accept();
+					System.out.println("                           	 			TPS Activated");
+					
 					clientList.add(s);
 					Thread t = new Thread(new ClientMessageReceiverThread(s, "CLIENT "+clientNo));
 					t.start(); 
@@ -79,7 +80,18 @@ class ServerRun{
 
 	        System.out.println("	Lead Vehicle Control Options	");
 	        System.out.println("	COUPLE || BRAKE || RESTART 	");
-			String str = kb.readLine();		
+			String str = kb.readLine();	
+			
+			if(str.equals("brake"))
+			{
+
+			//brake defect fix 
+			}
+			else
+			{
+				//do nothing
+			}
+			
 			DataInputDto data = sendDataToClient(str, serverSpeed);
 
 			if(str.equalsIgnoreCase("exit")) {
@@ -106,12 +118,15 @@ class ServerRun{
 		DataInputDto result = null;
 		AppendableObjectOutputStream os = null;
 		int clientNo = 0;
+		System.out.println("	COUPLE || BRAKE || RESTART 	" + str);
 		for (Socket s : clientList) {
 
 			clientNo++;
-			System.out.println("	COUPLE || BRAKE || RESTART 	" + str);
+			
 			switch (str) {
 			case StringConstants.INITIATE:
+				serverSpeed = getVehicleSpeedACC();
+				steeringAngleLead = getSteeringAngleACC();
 				result = sendInitialInputsToClient(speed, clientNo);
 				break;
 			case StringConstants.BRAKE:
@@ -144,18 +159,8 @@ class ServerRun{
 
 	private static DataInputDto brakeClient(int clientNo) throws IOException {
 		DataInputDto data = new DataInputDto();
-		Scanner sc = new Scanner(System.in);
-		System.out.println("If Emergency Brake Press 1 else press 0");
-		int brakeOption = sc.nextInt();
-		if(brakeOption == 1)
-		{
-			serverSpeed = 0;
-		}
-		else
-		{
-		serverSpeed = serverSpeed - 10;
-		}
-		System.out.println("Set speed of Client"+ serverSpeed );
+
+		System.out.println("Set speed of Following Vehicle"+ clientNo +serverSpeed );
 		//Scanner sc = new Scanner(System.in);
 		data.setSpeed(serverSpeed);
 		//data.setvGap(4);
@@ -166,13 +171,11 @@ class ServerRun{
 	private static DataInputDto sendInitialInputsToClient(int speed, int clientNo) {
 		DataInputDto data = new DataInputDto();
 		Boolean status = checkIfClientAlreadyInitiated(clientNo);
-		if(!status) {
+		status =true;
+		if(status) {
 			data.setSpeed(speed);
 			data.setSteerAngle(steeringAngleLead);
 			data.setDestDistance(destinationDistanceLeftLead);
-			/*Scanner sc = new Scanner(System.in);
-		System.out.println("Enter Gap for client-"+clientNo);
-		data.setvGap(sc.nextInt());*/
 			data.setOperation(StringConstants.INITIATE);
 			setInitatedStatus(clientNo, data);
 		} else {
@@ -232,16 +235,15 @@ class ServerRun{
 
 	} 
 
-	private static void startTPS() {
+	private static void startTPS() 
+	{
 
 		System.out.println("              <   <       <           < Truck Platooning System >          >       >   > ");
 		System.out.println("              <   <       <           <         Welcome         >          >       >   > ");
-		System.out.println("                                               Connected                                ");
-		System.out.println("                           			Platoon Status : Lead Vehicle                    ");
-		System.out.println("                                      Weather : Sunny 14 Degrees                    ");
-
-		System.out.println("                           	 	Traffic : Usual Traffic           ");
-
-
+		System.out.println("                                               Connected                               	 ");
+		System.out.println("                           			Platoon Status : Lead Vehicle                   	 ");
+		System.out.println("                                      Weather : Sunny 14 Degrees                    	");
+		System.out.println("                           	 			Traffic : Usual Traffic           					");
+		//speed initialization
 	}
 }
