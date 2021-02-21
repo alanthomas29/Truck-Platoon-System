@@ -79,7 +79,7 @@ public class ClientMessageReceiverThread implements Runnable {
 			break;
 
 		case StringConstants.CLIENTBRAKE:
-			System.out.println("Former Vehicle braking as Obstacle is detected");
+			System.out.println("FV Applied Emergency Brakes");
 			break;
 
 		case StringConstants.SMALL_DETECTED:
@@ -105,6 +105,8 @@ public class ClientMessageReceiverThread implements Runnable {
 			break;
 		case StringConstants.DECOUPLE:
 			break;
+		case StringConstants.NOOPERATION:
+			break;	
 		default:
 			break;
 		}

@@ -47,7 +47,7 @@ class ClientRun {
 	        // repeat as long as exit 
 	        // is not typed at client 
 	        System.out.println("Following Vehicle Control Options");
-	        System.out.println("CLIENTACK  || VEHICLEDETECTED || LARGE_DETECTED || CLIENTBRAKE || NO_OBSTACLE || DECOUPLE");
+	        System.out.println("CLIENTACK  || VEHICLEDETECTED || EMERGENCYBRAKE || NOOBSTACLE || DECOUPLE");
 	        
 	        while (!(str = kb.readLine()).equals("exit")) { 
 	        	DataInputDto data = sendDataToServer(str);
@@ -101,9 +101,9 @@ class ClientRun {
 		case StringConstants.SMALL_DETECTED:
 			result = smvDetected();
 			break;
-		case StringConstants.LARGE_DETECTED:
+		/*case StringConstants.LARGE_DETECTED:
 			result = lmvDetected();
-			break;
+			break;*/
 		case StringConstants.CLIENTBRAKE:
 			result = brakeServer();
 			break;
@@ -137,6 +137,7 @@ class ClientRun {
 		System.out.println("Vehicle gap reduced to : " +vGap);
 		clSpeed = speedLV;
 		System.out.println("Speed set  to (same as LV) : " + clSpeed);
+		data.setOperation(StringConstants.NOOPERATION);
 		return data;
 	}
 
@@ -147,7 +148,7 @@ class ClientRun {
 		data.setvGap(ClientRun.vGap);
 		data.setSpeed(ClientRun.clSpeed);
 		data.setOperation(StringConstants.SMALL_DETECTED);
-		if(ClientRun.vGap >= 5) {
+		if(ClientRun.vGap >= 7) {
 			data.setOperation(StringConstants.DECOUPLE);
 			sendDataToServer(StringConstants.DECOUPLE);
 		} 
@@ -155,19 +156,21 @@ class ClientRun {
 		
 	}
 
-
-	private static DataInputDto lmvDetected() {
+	// to be removed later
+	/*private static DataInputDto lmvDetected() {
 		DataInputDto data = new DataInputDto();
 		ClientRun.vGap = ClientRun.vGap + 4;
 		data.setvGap(ClientRun.vGap);
 		data.setOperation(StringConstants.LARGE_DETECTED);
 		return data;
-	}
+	}*/
 
 	private static DataInputDto brakeServer() {
 		DataInputDto data = new DataInputDto();
 		ClientRun.vGap = ClientRun.vGap + 2;
+		ClientRun.clSpeed = 0;
 		data.setvGap(ClientRun.vGap);
+		data.setvGap(ClientRun.clSpeed);
 		data.setOperation(StringConstants.CLIENTBRAKE);
 		return data;
 	}
