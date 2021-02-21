@@ -1,4 +1,4 @@
-# Distributed -Truck PlatooningSystems
+# Distributed and Parallel System - Truck Platooning Systems
 Course              - Embedded System for Mechatronics
 College             - FH Dortmund
 Distributed Systems – Semester Project -Truck Platooning Scenario
