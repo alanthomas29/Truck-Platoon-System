@@ -99,6 +99,8 @@ class ServerRun{
 			else
 			{
 				//do nothing
+				serverSpeed = getVehicleSpeedACC();
+				steeringAngleLead = getSteeringAngleACC();
 			}
 			
 			DataInputDto data = sendDataToClient(str, serverSpeed);
@@ -128,15 +130,14 @@ class ServerRun{
 		AppendableObjectOutputStream os = null;
 		int clientNo = 0;
 		System.out.println("	COUPLE || BRAKE || RESTART 	" + str);
+		
 		for (Socket s : clientList) {
 
 			clientNo++;
 			
 			switch (str) {
 			case StringConstants.INITIATE:
-				serverSpeed = getVehicleSpeedACC();
-				steeringAngleLead = getSteeringAngleACC();
-				result = sendInitialInputsToClient(speed, clientNo);
+				result = sendInitialInputsToClient(serverSpeed, clientNo);
 				break;
 			case StringConstants.BRAKE:
 				result = brakeClient(clientNo);
