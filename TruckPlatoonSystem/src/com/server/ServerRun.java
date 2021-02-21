@@ -27,7 +27,7 @@ class ServerRun {
 	public static int destDistCl1;
 	public static int destDistCl2;
 	public static List<Socket> clientList = new ArrayList<Socket>();
-	private static int clientNo = 1;
+	public static int clientNo = 1;
 
 	public static void main(String args[]) throws Exception {
 		// DataInputDto dt = new DataInputDto();
@@ -46,7 +46,7 @@ class ServerRun {
 					System.out.println("                           	 			TPS Activated");
 
 					clientList.add(s);
-					Thread t = new Thread(new ClientMessageReceiverThread(s, "CLIENT " + clientNo));
+					Thread t = new Thread(new ClientMessageReceiverThread(s, "Following Truck " + clientNo));
 					t.start();
 					clientNo++;
 				} catch (IOException e) {
@@ -71,27 +71,38 @@ class ServerRun {
 			System.out.println("	Lead Vehicle Control Options	");
 			System.out.println("	COUPLE || BRAKE || RESTART 	");
 			String str = kb.readLine();
-			DataInputDto data = sendDataToClient(str, serverSpeed);
-
-			if (str.equalsIgnoreCase("exit")) {
+			
+			if (str.equals(StringConstants.BRAKE)) {
+				Scanner sc = new Scanner(System.in);
+				System.out.println("If Emergency Brake Press 1 else press 0");
+				int brakeOption = sc.nextInt();
+				if (brakeOption == 1) {
+					serverSpeed = 0;
+				} else {
+					serverSpeed = serverSpeed - 10;
+				}
+				DataInputDto data = sendDataToClient(str, serverSpeed);
+			} else if(!str.equalsIgnoreCase("exit")){
+				serverSpeed = getVehicleSpeedACC();
+				steeringAngleLead = getSteeringAngleACC();
+				DataInputDto data = sendDataToClient(str, serverSpeed);
+			} else {
 				break;
 			}
+			
+			
+			//DataInputDto data = sendDataToClient(str, serverSpeed);
+
+	/*		if (str.equalsIgnoreCase("exit")) {
+				break;
+			}*/
 		}
 
-		System.out.println("Server Exited !!!");
+		System.out.println("Lead Truck Exited !!!");
 
 		System.exit(0);
 	}
 
-	private static void destinationDistance() {
-		// System.out.println(" Route Selected to Berlin Distance : 500 Km ");
-		// destinationDistanceLeftLead = 5;
-	}
-
-	private static void checkObstacle() {
-		// TODO Auto-generated method stub
-
-	}
 
 	private static DataInputDto sendDataToClient(String str, int speed) throws IOException {
 		DataInputDto result = null;
@@ -112,6 +123,11 @@ class ServerRun {
 				break;
 			case StringConstants.RESTART:
 				result = sendRestInputToClient(clientNo);
+				break;
+			case StringConstants.REPLATOON:
+				result.setSpeed(serverSpeed);
+				result.setOperation(StringConstants.REPLATOON);
+				break;
 			default:
 				break;
 
@@ -130,21 +146,22 @@ class ServerRun {
 
 	private static DataInputDto sendRestInputToClient(int clientNo) {
 		DataInputDto data = new DataInputDto();
-		data.setSpeed(serverSpeed);
+		data.setSpeed(speedCl1);
+		data.setvGap(vGapCl1);
 		data.setOperation(StringConstants.RESTART);
 		return data;
 	}
 
 	private static DataInputDto brakeClient(int clientNo) throws IOException {
 		DataInputDto data = new DataInputDto();
-		Scanner sc = new Scanner(System.in);
+		/*Scanner sc = new Scanner(System.in);
 		System.out.println("If Emergency Brake Press 1 else press 0");
 		int brakeOption = sc.nextInt();
 		if (brakeOption == 1) {
 			serverSpeed = 0;
 		} else {
 			serverSpeed = serverSpeed - 10;
-		}
+		}*/
 		System.out.println("Set speed of Following Vehicle" + clientNo + serverSpeed);
 		// Scanner sc = new Scanner(System.in);
 		data.setSpeed(serverSpeed);
@@ -156,8 +173,8 @@ class ServerRun {
 	private static DataInputDto sendInitialInputsToClient(int speed, int clientNo) {
 		DataInputDto data = new DataInputDto();
 		Boolean status = checkIfClientAlreadyInitiated(clientNo);
-		serverSpeed = getVehicleSpeedACC();
-		steeringAngleLead = getSteeringAngleACC();
+		/*serverSpeed = getVehicleSpeedACC();
+		steeringAngleLead = getSteeringAngleACC();*/
 		/*if(speed == 0) {
 			speed = getVehicleSpeedACC();
 			serverSpeed = speed;
@@ -242,5 +259,14 @@ class ServerRun {
 		System.out
 				.println("Vehicle Speed : " + serverSpeed + " kmph \nSteering Angle: " + steeringAngleLead + "Degrees");
 		System.out.println("                           	 		Wait for TPS Activation          					");
+	}
+
+	public static void communicator(DataInputDto data) throws IOException {
+		if (data.getOperation().equalsIgnoreCase(StringConstants.RESTART)) {
+			sendDataToClient(data.getOperation(), 0);
+		} else if (data.getOperation().equalsIgnoreCase(StringConstants.REPLATOON)) {
+			sendDataToClient(data.getOperation(), 0);
+		}
+
 	}
 }

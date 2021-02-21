@@ -83,10 +83,23 @@ public class ServerMessageReceiver implements Runnable {
 			break;
 			
 		case StringConstants.RESTART :
-			System.out.println(" ReConnect ");
+			System.out.println("Setting speed to: " + data.getSpeed() + " mph");
+			System.out.println("Setting Vehicle Gap to: " + data.getvGap() + " meters");
 			ClientRun.clSpeed = data.getSpeed();
+			ClientRun.vGap = data.getvGap();
 			break;
 			
+		case StringConstants.REPLATOON :
+			ClientRun.speedLV = data.getSpeed();
+			ClientRun.clSpeed = ClientRun.speedLV + 10;
+			System.out.println("Speed increased  to : " + ClientRun.clSpeed);
+			// Thread.sleep(2000);
+			// wait
+			ClientRun.vGap = 2;
+			System.out.println("Vehicle gap reduced to : " +ClientRun.vGap);
+			ClientRun.clSpeed = ClientRun.speedLV;
+			System.out.println("Speed set  to (same as LV) : " + ClientRun.clSpeed);
+			break;
 		default:
 			break;
 		}

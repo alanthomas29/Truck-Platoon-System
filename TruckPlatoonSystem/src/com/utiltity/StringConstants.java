@@ -16,4 +16,5 @@ public class StringConstants {
 	
 	public static final String DECOUPLE = "DECOUPLE";
 	public static final String NOOPERATION = "No Operation";
+	public static final String REPLATOON = "REPLATOON";
 }

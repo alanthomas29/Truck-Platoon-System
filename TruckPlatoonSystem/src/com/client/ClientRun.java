@@ -143,7 +143,7 @@ class ClientRun {
 		System.out.println("Vehicle gap reduced to : " + vGap);
 		clSpeed = speedLV;
 		System.out.println("Speed set  to (same as LV) : " + clSpeed);
-		data.setOperation(StringConstants.NOOPERATION);
+		data.setOperation(StringConstants.REPLATOON);
 		return data;
 	}
 
@@ -172,10 +172,10 @@ class ClientRun {
 
 	private static DataInputDto brakeServer() {
 		DataInputDto data = new DataInputDto();
-		ClientRun.vGap = ClientRun.vGap + 2;
-		ClientRun.clSpeed = 0;
-		data.setvGap(ClientRun.vGap);
-		data.setvGap(ClientRun.clSpeed);
+		vGap = vGap + 2;
+		clSpeed = 0;
+		data.setvGap(vGap);
+		data.setSpeed(clSpeed);
 		data.setOperation(StringConstants.CLIENTBRAKE);
 		return data;
 	}
