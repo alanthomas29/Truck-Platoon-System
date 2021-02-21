@@ -59,9 +59,9 @@ public class DataInputDto implements Serializable {
 	}
 
 	@Override
-	public String toString() {
-		return "DataInputDto: {speed=" + getSpeed() + "vGap=" + getvGap() + "operation=" + getOperation() + "}";
-
+	public String toString()
+	{
+		return "DataInputDto: {Vehicle Speed : " + getSpeed() + " Vehicle Gap=" + getvGap() + "operation=" + getOperation() + "}";
 	}
 
 }
