@@ -47,7 +47,7 @@ class ClientRun {
 	        // repeat as long as exit 
 	        // is not typed at client 
 	        System.out.println("Following Vehicle Control Options");
-	        System.out.println("CLIENTACK  || SMALL_DETECTED || LARGE_DETECTED || CLIENTBRAKE || NO_OBSTACLE || DECOUPLE");
+	        System.out.println("CLIENTACK  || VEHICLEDETECTED || LARGE_DETECTED || CLIENTBRAKE || NO_OBSTACLE || DECOUPLE");
 	        
 	        while (!(str = kb.readLine()).equals("exit")) { 
 	        	DataInputDto data = sendDataToServer(str);
@@ -56,7 +56,12 @@ class ClientRun {
 	 			os = new AppendableObjectOutputStream(s.getOutputStream());
 	 			os.writeObject(data);
 	 			os.flush();
-	 			}
+	 			} else {
+					os = new AppendableObjectOutputStream(s.getOutputStream());
+					data.setOperation("exit");
+					os.writeObject(data);
+					os.flush();
+				}
 	 	        
 	        	//sendInitialInputsToServer();
 	            // send to the server 
