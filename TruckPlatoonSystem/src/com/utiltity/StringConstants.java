@@ -1,4 +1,22 @@
+/*
+* include package file and import files *
+*
+* */
 package com.utiltity;
+/**
+* File : StringConstants File
+* Description : Input from user to perform vehicle operations
+* 
+* @author Alan, Anish, Ninad ,Rohan
+*
+*/
+
+/**
+*
+* Class StringConstants : Input from user to perform vehicle operations
+*
+*/
+
 
 public class StringConstants {
 
@@ -18,3 +36,4 @@ public class StringConstants {
 	public static final String NOOPERATION = "No Operation";
 	public static final String REPLATOON = "REPLATOON";
 }
+/************************************************************* endoffile************************************************************************/

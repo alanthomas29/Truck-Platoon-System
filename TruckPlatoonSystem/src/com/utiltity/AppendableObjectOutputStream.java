@@ -1,4 +1,21 @@
+/*
+* include package file and import files *
+*
+* */
 package com.utiltity;
+
+/**
+* File : AppendableObjectOutputStream File
+* Description: Send data of object type
+* 
+* @author Alan, Anish, Ninad ,Rohan
+*
+*/
+/**
+*
+* Class AppendableObjectOutputStream : 
+*
+*/
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -19,3 +36,4 @@ public class AppendableObjectOutputStream extends ObjectOutputStream {
 	  }
 
 }
+/************************************************************** endoffile************************************************************************/
