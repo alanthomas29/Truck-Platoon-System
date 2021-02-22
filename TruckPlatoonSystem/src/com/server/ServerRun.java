@@ -1,6 +1,11 @@
+/*
+ * include package file and import files * 
+ * 
+ * */
 package com.server;
 
 import java.io.*;
+
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +16,13 @@ import com.utiltity.AppendableObjectOutputStream;
 import com.utiltity.DataInputDto;
 import com.utiltity.StringConstants;
 
+/**
+ * File : Server File Description : Behaviour of front vehicle with driver are
+ * simulated for Platoon vehicles following the leader vehicle characteristics
+ * 
+ * @author Alan, Anish, Ninad ,Rohan
+ *
+ */
 class ServerRun {
 
 	public static int serverSpeed;
@@ -29,13 +41,18 @@ class ServerRun {
 	public static List<Socket> clientList = new ArrayList<Socket>();
 	public static int clientNo = 1;
 
+	/**
+	 * Function Name : Main Function () Function Description : Main Function of
+	 * Server
+	 * 
+	 * @param args
+	 * @throws Exception
+	 */
 	public static void main(String args[]) throws Exception {
-		// DataInputDto dt = new DataInputDto();
 		// Create server Socket
 		ServerSocket ss = new ServerSocket(888);
 
 		startTPS();
-
 		// Accept New Client and add in Client List for sending messages
 		// Create new Thread for each client to show received messages
 		Thread thread = new Thread(() -> {
@@ -55,23 +72,19 @@ class ServerRun {
 			}
 		});
 		thread.start();
-
 		// to read data from the keyboard
 		BufferedReader kb = new BufferedReader(new InputStreamReader(System.in));
-
 		// Code to send messages to Client
 
 		while (true) {
-
 			if (clientList.size() == 0) {
 				Thread.sleep(1000);
 				continue;
 			}
-
 			System.out.println("	Lead Vehicle Control Options	");
-			System.out.println("	COUPLE || BRAKE || RESTART 	");
+			System.out.println("	COUPLE || BRAKE   ");
 			String str = kb.readLine();
-			
+
 			if (str.equals(StringConstants.BRAKE)) {
 				Scanner sc = new Scanner(System.in);
 				System.out.println("If Emergency Brake Press 1 else press 0");
@@ -82,20 +95,13 @@ class ServerRun {
 					serverSpeed = serverSpeed - 10;
 				}
 				DataInputDto data = sendDataToClient(str, serverSpeed);
-			} else if(!str.equalsIgnoreCase("exit")){
+			} else if (!str.equalsIgnoreCase("exit")) {
 				serverSpeed = getVehicleSpeedACC();
 				steeringAngleLead = getSteeringAngleACC();
 				DataInputDto data = sendDataToClient(str, serverSpeed);
 			} else {
 				break;
 			}
-			
-			
-			//DataInputDto data = sendDataToClient(str, serverSpeed);
-
-	/*		if (str.equalsIgnoreCase("exit")) {
-				break;
-			}*/
 		}
 
 		System.out.println("Lead Truck Exited !!!");
@@ -103,7 +109,15 @@ class ServerRun {
 		System.exit(0);
 	}
 
-
+	/**
+	 * Function Name : sendDataToClient Description : Send Vehicle Data of lead
+	 * vehicle to following vehicles
+	 * 
+	 * @param vehicleOperation
+	 * @param vehicleSpeed
+	 * @return DataInputDto
+	 * @throws IOException
+	 */
 	private static DataInputDto sendDataToClient(String str, int speed) throws IOException {
 		DataInputDto result = null;
 		AppendableObjectOutputStream os = null;
@@ -113,7 +127,6 @@ class ServerRun {
 		for (Socket s : clientList) {
 
 			clientNo++;
-
 			switch (str) {
 			case StringConstants.INITIATE:
 				result = sendInitialInputsToClient(serverSpeed, clientNo);
@@ -140,10 +153,16 @@ class ServerRun {
 				System.out.println("NO Data Sent...");
 			}
 		}
-		//destinationDistanceLeftLead--;
 		return result;
 	}
 
+	/**
+	 * Function Name : sendRestInputToClient Description : Sends Restart request to
+	 * the client
+	 * 
+	 * @param clientNo
+	 * @return DataInputDto
+	 */
 	private static DataInputDto sendRestInputToClient(int clientNo) {
 		DataInputDto data = new DataInputDto();
 		data.setSpeed(speedCl1);
@@ -152,62 +171,69 @@ class ServerRun {
 		return data;
 	}
 
+	/**
+	 * Function Name : brakeClient Description : Sends brake requests to platoon as
+	 * driver pressed brakes
+	 * 
+	 * @param clientNo
+	 * @return DataInputDto
+	 * @throws IOException
+	 */
 	private static DataInputDto brakeClient(int clientNo) throws IOException {
 		DataInputDto data = new DataInputDto();
-		/*Scanner sc = new Scanner(System.in);
-		System.out.println("If Emergency Brake Press 1 else press 0");
-		int brakeOption = sc.nextInt();
-		if (brakeOption == 1) {
-			serverSpeed = 0;
-		} else {
-			serverSpeed = serverSpeed - 10;
-		}*/
 		System.out.println("Set speed of Following Vehicle" + clientNo + serverSpeed);
-		// Scanner sc = new Scanner(System.in);
 		data.setSpeed(serverSpeed);
-		// data.setvGap(4);
 		data.setOperation(StringConstants.BRAKE);
 		return data;
 	}
 
+	/**
+	 * Function Name : sendInitialInputsToClient Description : send current lead
+	 * vehicle data to following vehicle
+	 * 
+	 * @param vehicleSpeed
+	 * @param clientNo
+	 * @return DataInputDto
+	 */
 	private static DataInputDto sendInitialInputsToClient(int speed, int clientNo) {
 		DataInputDto data = new DataInputDto();
 		Boolean status = checkIfClientAlreadyInitiated(clientNo);
-		/*serverSpeed = getVehicleSpeedACC();
-		steeringAngleLead = getSteeringAngleACC();*/
-		/*if(speed == 0) {
-			speed = getVehicleSpeedACC();
-			serverSpeed = speed;
-		}*/
 		status = true;
 		if (status) {
 			data.setSpeed(serverSpeed);
 			data.setSteerAngle(steeringAngleLead);
 			data.setDestDistance(destinationDistanceLeftLead);
 			data.setOperation(StringConstants.INITIATE);
-			setInitatedStatus(clientNo, data);
+			// setInitatedStatus(clientNo, data);
 		} else {
 			data.setOperation("No Operation");
 		}
 		return data;
 	}
 
-	private static void setInitatedStatus(int clientNo, DataInputDto data) {
-		if (clientNo == 1) {
-			speedCl1 = data.getSpeed();
-			vGapCl1 = data.getvGap();
-			steerAngleCl1 = data.getSteerAngle();
-			destDistCl1 = data.getDestDistance();
-			client1 = true;
-		} else if (clientNo == 2) {
-			speedCl2 = data.getSpeed();
-			vGapCl2 = data.getvGap();
-			steerAngleCl2 = data.getSteerAngle();
-			destDistCl1 = data.getDestDistance();
-			client2 = true;
-		}
+	/**
+	 * ***Code Removed*** Function Name : setInitatedStatus Description :
+	 * 
+	 * @param clientNo
+	 * @param data     private static void setInitatedStatus(int clientNo,
+	 *                 DataInputDto data) { if (clientNo == 1) { speedCl1 =
+	 *                 data.getSpeed(); vGapCl1 = data.getvGap(); steerAngleCl1 =
+	 *                 data.getSteerAngle(); destDistCl1 = data.getDestDistance();
+	 *                 client1 = true; } else if (clientNo == 2) { speedCl2 =
+	 *                 data.getSpeed(); vGapCl2 = data.getvGap(); steerAngleCl2 =
+	 *                 data.getSteerAngle(); destDistCl1 = data.getDestDistance();
+	 *                 client2 = true; }
+	 * 
+	 *                 }
+	 */
 
-	}
+	/**
+	 * Function Name : checkIfClientAlreadyInitiated Description : If follower
+	 * vehicle already connected
+	 * 
+	 * @param clientNo
+	 * @return status
+	 */
 
 	private static Boolean checkIfClientAlreadyInitiated(int clientNo) {
 		Boolean status = false;
@@ -224,17 +250,26 @@ class ServerRun {
 
 	}
 
+	/**
+	 * Function Name : checkIfClientAlreadyInitiated Description : Get Steering
+	 * angle from the driver considered a constant we are on a highway
+	 * 
+	 * @return steeringAngle
+	 */
 	private static int getSteeringAngleACC() {
-		/*
-		 * Scanner scanInput= new Scanner(System.in);
-		 * System.out.println("Set the steering angle ");
-		 */
-		int steeringAngle = 10;
-		// steeringAngle = scanInput.nextInt();
-		// scanInput.close();
+		int steeringAngle = 0;
+		Scanner scanInput = new Scanner(System.in);
+		System.out.println("Set Steering angle of the lead vehicle between 0 - 100");
+		steeringAngle = scanInput.nextInt();
 		return steeringAngle;
 	}
 
+	/**
+	 * Function Name : getVehicleSpeedACC Description : Get vehicle speed from the
+	 * driver
+	 * 
+	 * @return vehicleSpeed
+	 */
 	private static int getVehicleSpeedACC() {
 		Scanner scanInput = new Scanner(System.in);
 		System.out.println("Set Speed of the lead vehicle");
@@ -242,18 +277,24 @@ class ServerRun {
 		vehicleSpeed = scanInput.nextInt();
 
 		return vehicleSpeed;
-
 	}
 
+	/**
+	 * Function Name : startTPS Description : Platform Initialization function to
+	 * check Weather Route plan
+	 * 
+	 * @return void
+	 */
 	private static void startTPS() {
 
 		System.out.println("              <   <       <           < Truck Platooning System >          >       >   > ");
 		System.out.println("              <   <       <           <         Welcome         >          >       >   > ");
 		System.out.println("                                               Connected                               	 ");
-		System.out.println("                           			Platoon Status : Lead Vehicle                   	 ");
-		System.out.println("                                      Weather : Sunny 14 Degrees                    	");
-		System.out.println(
-				"                           	 			Traffic : Usual Traffic           					");
+		System.out.println("                              	   Platoon Status : Follower Vehicle");
+		System.out.println("                                      Weather : Sunny 14 Degrees");
+		System.out.println(" 					Client Connection Established");
+		System.out.println("                           	        Traffic : Usual Traffic");
+
 		serverSpeed = 60;
 		steeringAngleLead = 30;
 		System.out
@@ -261,6 +302,12 @@ class ServerRun {
 		System.out.println("                           	 		Wait for TPS Activation          					");
 	}
 
+	/**
+	 * Function Name : communicator Description : to receive data from
+	 * ClientMessageReceiverThread
+	 * 
+	 * @return
+	 */
 	public static void communicator(DataInputDto data) throws IOException {
 		if (data.getOperation().equalsIgnoreCase(StringConstants.RESTART)) {
 			sendDataToClient(data.getOperation(), 0);
@@ -270,3 +317,5 @@ class ServerRun {
 
 	}
 }
+
+/************************************************************** endoffile************************************************************************/
