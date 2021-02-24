@@ -68,7 +68,8 @@ public class ServerMessageReceiver implements Runnable {
 	}
 
 	/**
-	 * Function Name : performActivityClient Description : Receive lead truck
+	 * Function Name : performActivityClient 
+	 * Description : Receive lead truck
 	 * behavior
 	 * 
 	 * @param data

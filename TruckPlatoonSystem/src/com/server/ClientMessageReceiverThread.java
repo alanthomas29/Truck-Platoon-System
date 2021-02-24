@@ -122,10 +122,10 @@ public class ClientMessageReceiverThread implements Runnable {
 		case StringConstants.LARGE_DETECTED:
 			if (ClientName.trim().equalsIgnoreCase("Following Truck 1")) {
 				ServerRun.vGapCl1 = data.getvGap();
-				System.out.println(ClientName + " curr gap - " + ServerRun.vGapCl1);
+				System.out.println(ClientName + " Vehicle Gap : " + ServerRun.vGapCl1 + " meters ");
 			} else if (ClientName.trim().equalsIgnoreCase("Following Truck 2")) {
 				ServerRun.vGapCl2 = data.getvGap();
-				System.out.println(ClientName + " curr gap - " + ServerRun.vGapCl2);
+				System.out.println(ClientName + " Vehicle Gap : " + ServerRun.vGapCl2 + " meters ");
 			}
 			break;
 		case StringConstants.REPLATOON:

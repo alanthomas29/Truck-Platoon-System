@@ -16,6 +16,7 @@ import com.utiltity.AppendableObjectOutputStream;
 import com.utiltity.DataInputDto;
 import com.utiltity.StringConstants;
 
+
 /**
  * File : Server File Description : Behaviour of front vehicle with driver are
  * simulated for Platoon vehicles following the leader vehicle characteristics
@@ -40,6 +41,7 @@ class ServerRun {
 	public static int destDistCl2;
 	public static List<Socket> clientList = new ArrayList<Socket>();
 	public static int clientNo = 1;
+	
 
 	/**
 	 * Function Name : Main Function () Function Description : Main Function of
@@ -50,20 +52,20 @@ class ServerRun {
 	 */
 	public static void main(String args[]) throws Exception {
 		// Create server Socket
-		ServerSocket ss = new ServerSocket(888);
+		ServerSocket socketS = new ServerSocket(888);
 
 		startTPS();
 		// Accept New Client and add in Client List for sending messages
 		// Create new Thread for each client to show received messages
 		Thread thread = new Thread(() -> {
 			while (true) {
-				Socket s;
+				Socket clientS;
 				try {
-					s = ss.accept();
+					clientS = socketS.accept();
 					System.out.println("                           	 			TPS Activated");
 
-					clientList.add(s);
-					Thread t = new Thread(new ClientMessageReceiverThread(s, "Following Truck " + clientNo));
+					clientList.add(clientS);
+					Thread t = new Thread(new ClientMessageReceiverThread(clientS, "Following Truck " + clientNo));
 					t.start();
 					clientNo++;
 				} catch (IOException e) {
@@ -92,8 +94,14 @@ class ServerRun {
 				if (brakeOption == 1) {
 					serverSpeed = 0;
 				} else {
-					serverSpeed = serverSpeed - 10;
-				}
+					if(serverSpeed==0) {
+						System.out.println("Vehicle Speed already reduced to 0");
+						System.out.println("Vehicle in stop mode");
+					}
+					else {
+						serverSpeed = serverSpeed - 10;	
+					}
+					}
 				DataInputDto data = sendDataToClient(str, serverSpeed);
 			} else if (!str.equalsIgnoreCase("exit")) {
 				serverSpeed = getVehicleSpeedACC();
@@ -119,6 +127,8 @@ class ServerRun {
 	 * @throws IOException
 	 */
 	private static DataInputDto sendDataToClient(String str, int speed) throws IOException {
+	
+		
 		DataInputDto result = null;
 		AppendableObjectOutputStream os = null;
 		int clientNo = 0;
@@ -154,6 +164,7 @@ class ServerRun {
 			}
 		}
 		return result;
+		
 	}
 
 	/**
@@ -164,11 +175,14 @@ class ServerRun {
 	 * @return DataInputDto
 	 */
 	private static DataInputDto sendRestInputToClient(int clientNo) {
+	
+		
 		DataInputDto data = new DataInputDto();
 		data.setSpeed(speedCl1);
 		data.setvGap(vGapCl1);
 		data.setOperation(StringConstants.RESTART);
 		return data;
+		
 	}
 
 	/**
@@ -180,11 +194,13 @@ class ServerRun {
 	 * @throws IOException
 	 */
 	private static DataInputDto brakeClient(int clientNo) throws IOException {
+		
 		DataInputDto data = new DataInputDto();
 		System.out.println("Set speed of Following Vehicle" + clientNo + serverSpeed);
 		data.setSpeed(serverSpeed);
 		data.setOperation(StringConstants.BRAKE);
 		return data;
+		
 	}
 
 	/**
@@ -196,6 +212,8 @@ class ServerRun {
 	 * @return DataInputDto
 	 */
 	private static DataInputDto sendInitialInputsToClient(int speed, int clientNo) {
+		
+		
 		DataInputDto data = new DataInputDto();
 		Boolean status = checkIfClientAlreadyInitiated(clientNo);
 		status = true;
@@ -209,6 +227,7 @@ class ServerRun {
 			data.setOperation("No Operation");
 		}
 		return data;
+		
 	}
 
 	/**
@@ -257,11 +276,14 @@ class ServerRun {
 	 * @return steeringAngle
 	 */
 	private static int getSteeringAngleACC() {
+	
+		
 		int steeringAngle = 0;
 		Scanner scanInput = new Scanner(System.in);
 		System.out.println("Set Steering angle of the lead vehicle between 0 - 100");
 		steeringAngle = scanInput.nextInt();
 		return steeringAngle;
+	
 	}
 
 	/**
@@ -271,11 +293,11 @@ class ServerRun {
 	 * @return vehicleSpeed
 	 */
 	private static int getVehicleSpeedACC() {
+		
 		Scanner scanInput = new Scanner(System.in);
 		System.out.println("Set Speed of the lead vehicle");
 		int vehicleSpeed = 0;
 		vehicleSpeed = scanInput.nextInt();
-
 		return vehicleSpeed;
 	}
 

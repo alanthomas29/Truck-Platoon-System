@@ -4,6 +4,7 @@
  * */
 package com.client;
 
+
 // Client2 class that 
 // sends data and receives also 
 import java.io.BufferedReader;
@@ -13,6 +14,7 @@ import java.net.Socket;
 import com.utiltity.AppendableObjectOutputStream;
 import com.utiltity.DataInputDto;
 import com.utiltity.StringConstants;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * File 		     : Client File 
@@ -34,10 +36,11 @@ class ClientRun {
 	public static int truckLength = 1;
 	public static int speedLV;
 	public static boolean flag = false;
-
+	private final static ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 	@SuppressWarnings("resource")
 	/**
-	 * Function Name : Main Function () Function Description : Main Function of
+	 * Function Name : Main Function () Function 
+	 * Description : Main Function of
 	 * Client
 	 * 
 	 * @param args
@@ -101,7 +104,8 @@ class ClientRun {
 	}
 
 	/**
-	 * Function Name : sendDataToServer Description : Send Vehicle Data of following
+	 * Function Name : sendDataToServer 
+	 * Description : Send Vehicle Data of following
 	 * vehicle to lead vehicles
 	 * 
 	 * @param str
@@ -110,6 +114,9 @@ class ClientRun {
 	 */
 	@SuppressWarnings("resource")
 	private static DataInputDto sendDataToServer(String str) {
+		try {
+			lock.writeLock().lock();
+		
 		DataInputDto result = null;
 
 		System.out.println("OPTION SELECTED   : " + str);
@@ -135,29 +142,43 @@ class ClientRun {
 		}
 
 		return result;
+		}finally {
+			lock.writeLock().unlock();
+		}
 	}
 
 	/**
-	 * Function Name : decouple Description : If the following vehicle are unable to
+	 * Function Name : decouple 
+	 * Description : If the following vehicle are unable to
 	 * maintain the required condition then following vehicles shall decouple
 	 * 
 	 * @return DataInputDto
 	 *
 	 */
+	
 	private static DataInputDto decouple() {
+		try {
+			lock.writeLock().lock();
+		
 		DataInputDto data = new DataInputDto();
 		data.setOperation(StringConstants.DECOUPLE);
 		return data;
+		}
+		finally {
+			lock.writeLock().unlock();
+		}
 	}
 
 	/**
-	 * Function Name : replatoon Description : If no obstacle is detected by the
+	 * Function Name : replatoon 
+	 * Description : If no obstacle is detected by the
 	 * following vehicle, then speed should be increased and the gap between the
 	 * lead vehicle and following vehicle should be reduced to 10 meter
 	 * 
 	 * @return DataInputDto
 	 *
 	 */
+	
 	private static DataInputDto replatoon() {
 		DataInputDto data = new DataInputDto();
 		int speed = speedLV;
@@ -172,7 +193,8 @@ class ClientRun {
 	}
 
 	/**
-	 * Function Name : smvDetected Description : When obstacle is detected by the
+	 * Function Name : smvDetected
+     * Description : When obstacle is detected by the
 	 * following vehicle the gap between lead vehicle and following vehicle should
 	 * increase by 10
 	 * 
@@ -180,9 +202,19 @@ class ClientRun {
 	 *
 	 */
 	private static DataInputDto smvDetected() {
+		try {
+			lock.writeLock().lock();
+		
 		DataInputDto data = new DataInputDto();
 		ClientRun.vGap = ClientRun.vGap + 1;
-		ClientRun.clSpeed = ClientRun.clSpeed - 10;
+		if(ClientRun.clSpeed==0) {
+			System.out.println("Vehicle mode : Stop");
+			System.out.println("Vehicle speed : 0 mph");
+		}
+		else 
+		{
+			ClientRun.clSpeed = ClientRun.clSpeed - 10;
+		}
 		data.setvGap(ClientRun.vGap);
 		data.setSpeed(ClientRun.clSpeed);
 		data.setOperation(StringConstants.SMALL_DETECTED);
@@ -191,10 +223,15 @@ class ClientRun {
 			sendDataToServer(StringConstants.DECOUPLE);
 		}
 		return data;
+		}
+		finally {
+			lock.writeLock().unlock();
+		}
 	}
 
 	/**
-	 * Function Name : brakeServer Description : On braking the speed should be
+	 * Function Name : brakeServer 
+	 * Description : On braking the speed should be
 	 * reduced to 0 and vehicle safe distance should be maintained between lead and
 	 * following vehicle
 	 * 
@@ -202,17 +239,34 @@ class ClientRun {
 	 *
 	 */
 	private static DataInputDto brakeServer() {
+		try {
+			lock.writeLock().lock();
+		
 		DataInputDto data = new DataInputDto();
+		
+		speedLV=data.getSpeed();
+		System.out.println("Lead vehicle speed " +speedLV+ " mph ");
+		if(speedLV>0)
+		{
 		vGap = vGap + 2;
+		}
+		else {
+			//Do Nothing
+		}
 		clSpeed = 0;
 		data.setvGap(vGap);
 		data.setSpeed(clSpeed);
 		data.setOperation(StringConstants.CLIENTBRAKE);
 		return data;
+		}
+		finally {
+			lock.writeLock().unlock();
+		}
 	}
 
 	/**
-	 * Function Name : sendInitialInputsToServer Description : this function sends
+	 * Function Name : sendInitialInputsToServer 
+	 * Description : this function sends
 	 * the initial speed of the Lead vehicle and distance between lead vehicle and
 	 * following vehicle
 	 * 
@@ -220,6 +274,9 @@ class ClientRun {
 	 *
 	 */
 	private static DataInputDto sendInitialInputsToServer() {
+		try {
+			lock.writeLock().lock();
+		
 		DataInputDto data = new DataInputDto();
 
 		System.out.println("Following Vehicle Speed " + clSpeed + " mph 	Safe Distance/Vehicle Gap " + vGap);
@@ -229,6 +286,10 @@ class ClientRun {
 		// to match with server operation
 		data.setOperation(StringConstants.CLIENTACK);
 		return data;
+		}
+		finally {
+	 	lock.writeLock().unlock();
+		}
 	}
 
 	/**
