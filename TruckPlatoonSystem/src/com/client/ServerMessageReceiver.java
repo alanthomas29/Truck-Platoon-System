@@ -84,12 +84,12 @@ public class ServerMessageReceiver implements Runnable {
 			ClientRun.destDistance = data.getDestDistance() + ClientRun.truckLength + ClientRun.vGap;
 			System.out.println("Former Vehicle Connected to Lead Vehicle");
 			System.out.println("Setting speed to: " + data.getSpeed() + " mph");
-			System.out.println("Setting steering angle to: " + data.getSteerAngle());
+			System.out.println("Setting steering angle to: " + data.getSteerAngle()+" degrees");
 			break;
 
 		case StringConstants.BRAKE:
 			ClientRun.clSpeed = data.getSpeed();
-			System.out.println("Braking as Lead Vehcile Applied Brakes and Setting speed to " + ClientRun.clSpeed);
+			System.out.println("Braking as Lead Vehcile Applied Brakes and Setting speed to " + ClientRun.clSpeed + " mph");
 			ClientRun.clSpeed = data.getSpeed();
 			break;
 
@@ -103,11 +103,11 @@ public class ServerMessageReceiver implements Runnable {
 		case StringConstants.REPLATOON:
 			ClientRun.speedLV = data.getSpeed();
 			ClientRun.clSpeed = ClientRun.speedLV + 10;
-			System.out.println("Speed increased  to : " + ClientRun.clSpeed);
+			System.out.println("Speed increased  to : " + ClientRun.clSpeed + " mph");
 			ClientRun.vGap = 2;
-			System.out.println("Vehicle gap reduced to : " + ClientRun.vGap);
+			System.out.println("Vehicle gap reduced to : " + ClientRun.vGap+ " meters");
 			ClientRun.clSpeed = ClientRun.speedLV;
-			System.out.println("Speed set  to (same as LV) : " + ClientRun.clSpeed);
+			System.out.println("Speed set  to (same as LV) : " + ClientRun.clSpeed + " mph");
 			break;
 		default:
 			break;

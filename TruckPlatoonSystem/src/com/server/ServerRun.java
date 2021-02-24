@@ -196,7 +196,7 @@ class ServerRun {
 	private static DataInputDto brakeClient(int clientNo) throws IOException {
 		
 		DataInputDto data = new DataInputDto();
-		System.out.println("Set speed of Following Vehicle" + clientNo + serverSpeed);
+		System.out.println("Set speed of Following Vehicle" + clientNo + serverSpeed +" mph");
 		data.setSpeed(serverSpeed);
 		data.setOperation(StringConstants.BRAKE);
 		return data;
@@ -320,7 +320,7 @@ class ServerRun {
 		serverSpeed = 60;
 		steeringAngleLead = 30;
 		System.out
-				.println("Vehicle Speed : " + serverSpeed + " kmph \nSteering Angle: " + steeringAngleLead + "Degrees");
+				.println("Vehicle Speed : " + serverSpeed + " mph \nSteering Angle: " + steeringAngleLead + " Degrees");
 		System.out.println("                           	 		Wait for TPS Activation          					");
 	}
 

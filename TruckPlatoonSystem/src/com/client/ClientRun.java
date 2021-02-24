@@ -79,7 +79,7 @@ class ClientRun {
 				}
 				// sendInitialInputsToServer();
 				// send to the server
-				System.out.println("str-" + str);
+				//System.out.println("str-" + str);
 				// dos.writeBytes(str + "\n");
 			}
 			DataInputDto data = new DataInputDto();
@@ -183,12 +183,12 @@ class ClientRun {
 		DataInputDto data = new DataInputDto();
 		int speed = speedLV;
 		clSpeed = speed + 10;
-		System.out.println("Speed increased  to : " + clSpeed );
+		System.out.println("Speed increased  to : " + clSpeed +" mph");
 		vGap = 2;
-		System.out.println("Vehicle gap reduced to : " + vGap);
+		System.out.println("Vehicle gap reduced to : " + vGap + " meters");
 		clSpeed = speedLV;
-		System.out.println("Speed set  to (same as LV) : " + clSpeed );
-		data.setOperation(StringConstants.NOOPERATION);
+		System.out.println("Speed set  to (same as LV) : " + clSpeed +" mph");
+		data.setOperation(StringConstants.NO_OBSTACLE);
 		return data;
 	}
 
@@ -245,7 +245,7 @@ class ClientRun {
 		DataInputDto data = new DataInputDto();
 		
 		speedLV=data.getSpeed();
-		System.out.println("Lead vehicle speed " +speedLV+ " mph ");
+		//System.out.println("Lead vehicle speed " +speedLV+ " mph ");
 		if(speedLV>0)
 		{
 		vGap = vGap + 2;

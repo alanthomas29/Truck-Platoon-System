@@ -93,7 +93,7 @@ public class ClientMessageReceiverThread implements Runnable {
 			break;
 
 		case StringConstants.CLIENTBRAKE:
-			System.out.println("FV Applied Emergency Brakes");
+			System.out.println(ClientName +" Applied Emergency Brakes");
 			if (ClientName.trim().equalsIgnoreCase("Following Truck 1")) {
 				if (ServerRun.clientNo > 1) {
 					DataInputDto newData = new DataInputDto();
@@ -112,10 +112,10 @@ public class ClientMessageReceiverThread implements Runnable {
 		case StringConstants.SMALL_DETECTED:
 			if (ClientName.trim().equalsIgnoreCase("Following Truck 1")) {
 				ServerRun.vGapCl1 = data.getvGap();
-				System.out.println(ClientName + " curr gap - " + ServerRun.vGapCl1);
+				System.out.println(ClientName + " Vehicle gap increased to : " + ServerRun.vGapCl1+ " meters");
 			} else if (ClientName.trim().equalsIgnoreCase("LV 2")) {
 				ServerRun.vGapCl2 = data.getvGap();
-				System.out.println(ClientName + " curr gap - " + ServerRun.vGapCl2);
+				System.out.println(ClientName + " Vehicle gap increased to : " + ServerRun.vGapCl2+ " meters");
 			}
 			break;
 
@@ -133,7 +133,7 @@ public class ClientMessageReceiverThread implements Runnable {
 			newData.setOperation(StringConstants.REPLATOON);
 			ServerRun.communicator(newData);
 			break;
-		case StringConstants.NOOPERATION:
+		case StringConstants.NO_OBSTACLE:
 			break;
 		default:
 			break;
