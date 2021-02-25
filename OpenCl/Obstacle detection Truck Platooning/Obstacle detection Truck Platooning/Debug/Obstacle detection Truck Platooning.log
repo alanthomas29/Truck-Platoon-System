@@ -1,0 +1,4 @@
+﻿  Obstacle detection Truck Platooning.cpp
+  cl_version.h: CL_TARGET_OPENCL_VERSION is not defined. Defaulting to 220 (OpenCL 2.2)
+E:\DevSoft\Tutorials\syscl_opencl_gpgpu\Obstacle detection Truck Platooning\Obstacle detection Truck Platooning\Obstacle detection Truck Platooning.cpp(60,1): warning C4326: return type of 'main' should be 'int' instead of 'float'
+  Obstacle detection Truck Platooning.vcxproj -> E:\DevSoft\Tutorials\syscl_opencl_gpgpu\Obstacle detection Truck Platooning\Debug\Obstacle detection Truck Platooning.exe
