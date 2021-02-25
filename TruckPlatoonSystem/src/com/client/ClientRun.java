@@ -129,7 +129,7 @@ class ClientRun {
 			result = smvDetected();
 			break;
 		case StringConstants.CLIENTBRAKE:
-			result = brakeServer();
+			result = emergencyBrake();
 			break;
 		case StringConstants.NO_OBSTACLE:
 			result = replatoon();
@@ -180,6 +180,7 @@ class ClientRun {
 	 */
 	
 	private static DataInputDto replatoon() {
+		
 		DataInputDto data = new DataInputDto();
 		int speed = speedLV;
 		clSpeed = speed + 10;
@@ -190,6 +191,7 @@ class ClientRun {
 		System.out.println("Speed set  to (same as LV) : " + clSpeed +" mph");
 		data.setOperation(StringConstants.NO_OBSTACLE);
 		return data;
+	
 	}
 
 	/**
@@ -230,7 +232,7 @@ class ClientRun {
 	}
 
 	/**
-	 * Function Name : brakeServer 
+	 * Function Name : emergencyBrake 
 	 * Description : On braking the speed should be
 	 * reduced to 0 and vehicle safe distance should be maintained between lead and
 	 * following vehicle
@@ -238,13 +240,13 @@ class ClientRun {
 	 * @return DataInputDto
 	 *
 	 */
-	private static DataInputDto brakeServer() {
+	private static DataInputDto emergencyBrake() {
 		try {
 			lock.writeLock().lock();
 		
 		DataInputDto data = new DataInputDto();
 		
-		speedLV=data.getSpeed();
+		//speedLV=data.getSpeed();
 		//System.out.println("Lead vehicle speed " +speedLV+ " mph ");
 		if(speedLV>0)
 		{

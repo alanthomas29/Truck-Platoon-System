@@ -90,6 +90,7 @@ public class ClientMessageReceiverThread implements Runnable {
 		case StringConstants.CLIENTACK:
 			System.out.println("Follower Vehicle:");
 			System.out.println("Speed set at: " + data.getSpeed() + " mph");
+			System.out.println("Steering Angle set at: " + data.getSteerAngle() + " degrees");
 			break;
 
 		case StringConstants.CLIENTBRAKE:

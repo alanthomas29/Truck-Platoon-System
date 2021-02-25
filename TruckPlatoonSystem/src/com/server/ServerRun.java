@@ -196,7 +196,7 @@ class ServerRun {
 	private static DataInputDto brakeClient(int clientNo) throws IOException {
 		
 		DataInputDto data = new DataInputDto();
-		System.out.println("Set speed of Following Vehicle" + clientNo + serverSpeed +" mph");
+		System.out.println("Set speed of Following Vehicle " + clientNo + "   : "  +  serverSpeed +" mph");
 		data.setSpeed(serverSpeed);
 		data.setOperation(StringConstants.BRAKE);
 		return data;
